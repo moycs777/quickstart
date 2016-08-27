@@ -1,5 +1,6 @@
 <?php
-use Illuminate\Support\Facades\Request;
+//use Illuminate\Support\Facades\Request;
+use Illuminate\Http\Request;
 use App\task;
 
 /*
@@ -21,8 +22,14 @@ Route::get('/', function () {
     ]);
 });
 
+Route::delete('/task/{task}', function (Task $task) {
+    $task->delete();
+
+    return redirect('/');
+});
+
 Route::post('/task', function (Request $request) {
-    $validator = Validator::make(Request::all(), [
+    $validator = Validator::make($request->all(), [
         'name' => 'required|max:255',
     ]);
 
@@ -32,14 +39,9 @@ Route::post('/task', function (Request $request) {
             ->withErrors($validator);
     }
 
-    // Create The Task...
-    $task = new App\Task;
+    $task = new Task;
     $task->name = $request->name;
     $task->save();
 
     return redirect('/');
-});
-
-Route::delete('/task/{task}', function(Task $task){
-
 });
